@@ -1,0 +1,154 @@
+# 🧠 Parkinson's Voice Detection using Machine Learning
+
+A complete Python pipeline to detect Parkinson's disease from voice recordings. This project extracts acoustic features from audio files, trains and compares multiple machine learning models, and provides a simple interface to predict the condition from new voice samples.
+
+---
+
+## ✨ Key Features
+
+-   **Acoustic Feature Extraction**: Automatically extracts 12 key vocal biomarkers (Jitter, Shimmer, HNR) from `.wav` files using the powerful `parselmouth` library, which interfaces with the Praat acoustic analysis software.
+-   **Automated ML Pipeline**: A streamlined process that includes:
+    -   Data preprocessing and feature generation.
+    -   Imputation of missing feature values.
+    -   Feature scaling for optimal model performance.
+-   **Model Comparison**: Trains, evaluates, and compares three robust classification models:
+    -   **Random Forest**
+    -   **XGBoost**
+    -   **Support Vector Machine (SVM)**
+-   **Best Model Selection**: Automatically identifies and saves the best-performing model based on test accuracy.
+-   **Ready-to-Use Prediction**: Includes a function to easily load the saved model and predict the status (Healthy or Parkinson's) of a new, unseen audio sample.
+
+---
+
+## 🔧 Installation & Setup
+
+Follow these steps to set up the project environment.
+
+### 1. Prerequisites: Praat
+
+This project depends on `parselmouth`, which requires the **Praat** software. While you don't need to install Praat separately on most systems (as `parselmouth` often bundles it), if you encounter issues, you can download it from [praat.org](https://www.praat.org/).
+
+### 2. Clone the Repository
+
+```bash
+git clone [https://github.com/Anandbala10/parkinsons-voice-detection.git](https://github.com/Anandbala10/parkinsons-voice-detection.git)
+cd parkinsons-voice-detection
+3. Set Up a Virtual Environment (Recommended)
+Bash
+```
+
+# For Windows
+```
+python -m venv venv
+venv\Scripts\activate
+
+# For macOS/Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+4. Install Dependencies
+Install all the required Python libraries using the following command:
+
+Bash
+```
+pip install pandas parselmouth-praat numpy scikit-learn xgboost
+```
+📁 Dataset Setup
+The script is designed to work with a specific folder structure for the audio data.
+
+Create two folders in the root of the project directory:
+
+PD_AH: This folder will contain the .wav voice recordings of individuals with Parkinson's Disease.
+
+HC_AH: This folder will contain the .wav voice recordings of Healthy Controls.
+
+Place your .wav files (preferably sustained vowel phonations like "ahhh") into the corresponding folders.
+
+The project structure should look like this:
+```
+parkinsons-voice-detection/
+├── PD_AH/
+│   ├── pd_sample_1.wav
+│   └── pd_sample_2.wav
+├── HC_AH/
+│   ├── hc_sample_1.wav
+│   └── hc_sample_2.wav
+├── your_script_name.py
+└── ... (other files)
+```
+🚀 How to Run the Project
+The entire process, from feature extraction to model saving, is automated.
+
+Step 1: Run the Main Script
+Execute the script from your terminal.
+
+Bash
+
+``` python feature_EX_park.py ```
+Step 2: Understand the Output
+The script will perform the following actions and print the progress:
+
+Feature Extraction: It will process all audio files in the PD_AH and HC_AH folders and save the extracted features into a file named parkinsons_voice_features.csv.
+
+Model Training: It will load the CSV, preprocess the data, and train the Random Forest, XGBoost, and SVM models.
+
+Evaluation: It will display a detailed performance comparison, including accuracy, confusion matrices, and classification reports for each model.
+
+Save Best Model: The best-performing model, along with the necessary scaler and imputer, will be saved to best_parkinsons_model.pkl.
+
+Step 3: Predict on a New Audio File
+To predict whether a new voice sample indicates Parkinson's, use the predict_new_sample() function.
+
+Place your new audio file (e.g., test_audio.wav) in the root directory.
+
+You can either uncomment the example line at the end of the main script or create a new Python file (predict.py) with the following content:
+
+``` predict.py ```
+
+Python
+```
+# Import the function from your main script
+from your_script_name import predict_new_sample
+
+# Define the path to your new audio file
+audio_file_path = 'test_audio.wav'
+
+# Get the prediction
+prediction = predict_new_sample(audio_file_path, model_file='best_parkinsons_model.pkl')
+
+if prediction is not None:
+    print(f"\nFinal Diagnosis for {audio_file_path}: {'Parkinson\'s' if prediction == 1 else 'Healthy'}")
+```
+Run the prediction script:
+
+Bash
+
+python predict.py
+The output will show the extracted features, the model's confidence, and the final prediction.
+
+🔬 Technical Details
+Features Extracted
+The model is trained on 12 standard acoustic features related to voice disorders:
+
+Jitter: Measures the cycle-to-cycle variation in fundamental frequency.
+
+jitter_local, jitter_abs, jitter_RAP, jitter_PPQ, jitter_DDP
+
+Shimmer: Measures the cycle-to-cycle variation in amplitude.
+
+shimmer_local, shimmer_dB, shimmer_APQ3, shimmer_APQ5, shimmer_APQ11, shimmer_DDA
+
+Harmonics-to-Noise Ratio (HNR): Measures the ratio of harmonic sound to noise in the voice.
+
+Models Compared
+Random Forest Classifier: An ensemble model using multiple decision trees to improve prediction accuracy and control over-fitting.
+
+XGBoost (Extreme Gradient Boosting): A powerful and efficient gradient boosting framework known for its high performance.
+
+Support Vector Machine (SVM): A robust classifier that finds an optimal hyperplane to separate classes in the feature space.
+
+🤝 Contributing
+Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
+
+📄 License
+This project is licensed under the terms of the LICENSE file. Please see the LICENSE file for details.
